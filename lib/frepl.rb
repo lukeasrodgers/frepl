@@ -22,7 +22,7 @@ module Frepl
 
     def initialize
       Frepl.compiler = 'gfortran'
-      Frepl.debug = true
+      Frepl.debug = false
       @classifier = Classifier.new
       @file = FortranFile.new
       @lines = []
