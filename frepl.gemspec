@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = Frepl::VERSION
   spec.authors       = ["Luke Rodgers"]
   spec.email         = ["lukeasrodgers@gmail.com"]
-  spec.summary       = %q{TODO: Write a short summary. Required.}
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.summary       = %q{A hacky, experimental Fortran REPL in ruby}
+  spec.description   = %q{(Badly) supports a small subset of Fortran to be run in a REPL-like environment, with a bunch of caveats.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
