@@ -37,7 +37,7 @@ module Frepl
     end
 
     def repl_command?
-      current_line.start_with?('frepl:')
+      current_line.start_with?('f:')
     end
 
     def declaration?

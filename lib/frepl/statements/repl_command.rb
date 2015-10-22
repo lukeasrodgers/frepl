@@ -14,7 +14,7 @@ module Frepl
         l: lambda do |file|
           puts "Available Frepl commands:\n"
           COMMANDS.each do |k, v|
-            puts "frepl:#{k}: #{v[:info]}"
+            puts "f:#{k} -- #{v[:info]}"
           end
         end
       }
@@ -29,12 +29,12 @@ module Frepl
       if COMMANDS.key?(cmd)
         COMMANDS[cmd][:l].call(file)
       else
-        puts "Unknown command: `#{cmd}`. Type `frepl:help` for list of commands."
+        puts "Unknown command: `#{cmd}`. Type `f:help` for list of commands."
       end
     end
 
     def cmd
-      @cmd ||= line.match(/repl:(.+)/)[1]
+      @cmd ||= line.match(/f:(.+)/)[1]
     end
   end
 end

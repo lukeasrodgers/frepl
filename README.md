@@ -55,7 +55,7 @@ You will get a prompt, and you can just start typing Fortran, type `q` to quit.
 > q
 ```
 
-You can see some repl commands by typing `frepl:help`. Not much going on there, currently.
+You can see some repl commands by typing `f:help`. Not much going on there, currently.
 
 
 ## Contributing
