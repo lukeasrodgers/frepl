@@ -18,6 +18,7 @@ appropriate here, but there are definitely better ways to do what I'm doing.
 ## Project plans
 
 * needs a `/bin` file
+* support swapping out the compiler, right now defaults to gfortran
 * needs tests (probably will have to define a way of simulating readline input)
 * redefining a function or subroutine doesn't work yet
 * users should be able to change the type of a variable
@@ -40,7 +41,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+The easiest way to start Frepl right now is with the rake task: `rake console`.
+
+You will get a prompt, and you can just start typing Fortran, type `q` to quit.
+
+```
+> integer :: a = 1
+> integer, dimension(:), allocatable :: b
+> allocate(b(0:4))
+> b = [1,2,3,4]
+> write(*,*) a * b
+           1           2           3           4
+> q
+```
+
+You can see some repl commands by typing `frepl:help`. Not much going on there, currently.
+
 
 ## Contributing
 
