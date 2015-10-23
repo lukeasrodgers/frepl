@@ -17,13 +17,7 @@ appropriate here, but there are definitely better ways to do what I'm doing.
 
 ## Project plans
 
-* needs a `/bin` file
-* support swapping out the compiler, right now defaults to gfortran
-* needs tests (probably will have to define a way of simulating readline input)
-* redefining a function or subroutine doesn't work yet
-* users should be able to change the type of a variable
-* custom type parsing probably doesn't work right now
-* can't use modules; not sure how important this is
+See issue tracker.
 
 ## Installation
 
