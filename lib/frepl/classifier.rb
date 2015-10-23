@@ -21,7 +21,10 @@ module Frepl
       else
         return classify_single_line(line)
       end
+    end
 
+    def interrupt
+      @current_multiline_obj = nil
     end
 
     def executable?
@@ -57,6 +60,10 @@ module Frepl
       current_line.match(/\s*[a-zA-Z0-9]+\s*=.*/) != nil
     end
 
+    def indentation_level
+      @current_multiline_obj ? 2 : 0
+    end
+
     private
 
     def classify_multiline(line)
@@ -83,6 +90,8 @@ module Frepl
         Assignment.new(line)
       elsif allocation?
         Allocation.new(line)
+      elsif ignorable?
+        nil
       else
         puts "I don't think `#{line}` is valid Fortran. You made a mistake, or, more likely, I'm dumb."
         @all_lines.pop
@@ -102,6 +111,22 @@ module Frepl
 
     def done_multiline?
       @current_lines.size > 0 && @current_lines.last.match(/end subroutine|end function/)
+    end
+
+    def ignorable?
+      program_statements? || blank? || comment?
+    end
+
+    def program_statements?
+      current_line.match(/\Aprogram .+|implicit .+|\Aend program/) != nil
+    end
+
+    def blank?
+      current_line.match(/\A\s*\n\z/)
+    end
+
+    def comment?
+      current_line.match(/\A!/)
     end
   end
 end

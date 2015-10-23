@@ -37,8 +37,8 @@ module Frepl
   class MultilineStatement < Statement
     attr_reader :lines
 
-    def initialize(lines)
-      @lines = lines
+    def initialize
+      @lines = []
     end
 
     def output

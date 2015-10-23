@@ -23,27 +23,55 @@ module Frepl
     def initialize
       Frepl.compiler = 'gfortran'
       Frepl.debug = false
-      @classifier = Classifier.new
-      @file = FortranFile.new
-      @lines = []
+      reset!
     end
 
     def run
-      while buf = Readline.readline('> ', true)
-        @lines << buf
-        process_line(buf)
+      loop do
+        begin
+          while buf = Readline.readline(prompt, true)
+            @lines << buf
+            process_line(buf)
+          end
+        rescue Interrupt
+          @classifier.interrupt
+          puts "^C\n"
+        rescue SystemExit, SignalException
+          raise
+        rescue Exception => e
+          puts "Exception!: #{e}"
+          puts e.backtrace
+          raise
+        end
       end
+    end
+    
+    def run_file(file)
+      file.each do |line|
+        @lines << line
+        process_line(line)
+      end
+      reset!
     end
 
     private
 
+    def prompt
+       '> ' + (' ' * @classifier.indentation_level)
+    end
+
     def process_line(line)
       exit(0) if line.chomp == 'q'
+      Frepl.log("classifying: #{line}")
       line_obj = @classifier.classify(line)
       @file.add(line_obj) unless line_obj.nil? || line_obj.incomplete?
+    end
+
+    def reset!
+      @classifier = Classifier.new
+      @file = FortranFile.new
+      @lines = []
     end
   end
 
 end
-
-Frepl::Main.run
