@@ -61,7 +61,11 @@ module Frepl
     end
 
     def indentation_level
-      @current_multiline_obj ? 2 : 0
+      if @current_multiline_obj && @current_multiline_obj.incomplete?
+        2
+      else
+        0
+      end
     end
 
     private
