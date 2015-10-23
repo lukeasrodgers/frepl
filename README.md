@@ -35,7 +35,9 @@ Or install it yourself as:
 
 ## Usage
 
-The easiest way to start Frepl right now is with the rake task: `rake console`.
+You should be able to run `frepl` from the command line after having installed the gem.
+
+Alternatively, if you have the source code, you can run `rake console` from the gem folder.
 
 You will get a prompt, and you can just start typing Fortran, type `q` to quit.
 
@@ -50,7 +52,6 @@ You will get a prompt, and you can just start typing Fortran, type `q` to quit.
 ```
 
 You can see some repl commands by typing `f:help`. Not much going on there, currently.
-
 
 ## Contributing
 
