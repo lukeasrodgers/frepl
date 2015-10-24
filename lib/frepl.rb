@@ -13,6 +13,10 @@ module Frepl
     puts message if @debug
   end
 
+  def output(o)
+    puts o
+  end
+
   class Main
     class << self
       def run

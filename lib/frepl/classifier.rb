@@ -1,5 +1,17 @@
 module Frepl
   class Classifier
+    VARIABLE_NAME_REGEX = /[a-zA-Z][a-zA-Z0-9_]{,30}/
+    ASSIGNABLE_VALUE_REGEX = /[^\s]+/
+    # TODO: parameter/dimension order shouldn't matter here
+    DECLARATION_REGEX = /\As*(real|integer|type)(\s*,?\s*parameter\s*,\s*)?(\s*,?\s*dimension\([^\)]+\))?\s*(?:::)?\s*(.*)/
+    ASSIGNMENT_REGEX = /\As*(#{VARIABLE_NAME_REGEX})\s*=\s*(#{ASSIGNABLE_VALUE_REGEX})/
+    OLDSKOOL_ARRAY_VALUE_REGEX = /\/[^\]]+\//
+    F2003_ARRAY_VALUE_REGEX = /\[[^\]]+\]/
+    ARRAY_VALUE_REGEX = /#{OLDSKOOL_ARRAY_VALUE_REGEX}|#{F2003_ARRAY_VALUE_REGEX}/
+    TYPE_REGEX = /real|integer|character/
+    FUNCTION_REGEX = /(#{TYPE_REGEX})\s+function\s+(#{VARIABLE_NAME_REGEX})/
+    SUBROUTINE_REGEX = /subroutine\s+(#{VARIABLE_NAME_REGEX})/
+
     def initialize
       @all_lines = []
       @current_lines = []
@@ -7,12 +19,13 @@ module Frepl
     end
 
     def classify(line)
-      @all_lines << line
-      @current_lines << line
-
       if @current_multiline_obj && !@current_multiline_obj.incomplete?
         @current_multiline_obj = nil
+        @current_lines = []
       end
+
+      @all_lines << line
+      @current_lines << line
 
       if multiline?(line)
         Frepl.log("MULTILINE")
@@ -43,8 +56,26 @@ module Frepl
       current_line.start_with?('f:')
     end
 
+    # TODO this is stupid, may need real parser here
+    def multi_declaration?
+      m = current_line.match(DECLARATION_REGEX)
+      return false unless m
+      if m[4].gsub(ARRAY_VALUE_REGEX, '').count(',') > 0
+        true
+      else
+        false
+      end
+    end
+
+    # TODO this is stupid, may need real parser here
     def declaration?
-      current_line.match(/real|integer|type.*::\s+/) != nil
+      m = current_line.match(DECLARATION_REGEX)
+      return false unless m
+      if m[4].gsub(ARRAY_VALUE_REGEX, '').count(',') == 0
+        true
+      else
+        false
+      end
     end
 
     def allocation?
@@ -56,8 +87,7 @@ module Frepl
     end
 
     def assignment?
-      # TODO var name regex
-      current_line.match(/\s*[a-zA-Z0-9]+\s*=.*/) != nil
+      current_line.match(VARIABLE_NAME_REGEX)
     end
 
     def indentation_level
@@ -73,7 +103,6 @@ module Frepl
     def classify_multiline(line)
       if @current_lines.size == 1
         raise 'Already have multiline obj' unless @current_multiline_obj.nil?
-        # new obj
         if line.match(/function/)
           @current_multiline_obj = Function.new
         elsif line.match(/subroutine/)
@@ -86,6 +115,8 @@ module Frepl
     def classify_single_line(line)
       obj = if repl_command?
         ReplCommand.new(line)
+      elsif multi_declaration?
+        MultiDeclaration.new(line)
       elsif declaration?
         Declaration.new(line)
       elsif run?

@@ -23,6 +23,7 @@ module Frepl
 
     def initialize(line)
       @line = line
+      parse
     end
 
     def output
@@ -32,13 +33,19 @@ module Frepl
     def incomplete?
       false
     end
+
+    private
+
+    def parse
+      # override me at your leisure, to get parsing on initialization
+    end
   end
 
   class MultilineStatement < Statement
     attr_reader :lines
 
-    def initialize
-      @lines = []
+    def initialize(lines = [])
+      @lines = lines
     end
 
     def output
@@ -58,7 +65,7 @@ end
 require 'frepl/statements/function'
 require 'frepl/statements/subroutine'
 require 'frepl/statements/declaration'
-require 'frepl/statements/declaration'
+require 'frepl/statements/multi_declaration'
 require 'frepl/statements/allocation'
 require 'frepl/statements/assignment'
 require 'frepl/statements/execution'
