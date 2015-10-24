@@ -5,6 +5,9 @@ that I wrote because I was trying to learn Fortran, and I find the feedback
 loop you get with a REPL makes learning a language much easier and more
 enjoyable.
 
+You don't need to know ruby to use Frepl, but you do need to have ruby (at least version 2)
+installed.
+
 There are a lot of deficiencies with this code, namely:
 
 * Only knows how to classify/parse a limited set of Fortran
