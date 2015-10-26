@@ -7,17 +7,26 @@ enjoyable.
 
 There are a lot of deficiencies with this code, namely:
 
-* Only knows how to classify/parse a limited set of Fortran
+* Only knows how to classify/parse a limited set of Fortran.
 * IO is severely hampered; basically you can't do the I part.
 I have some ideas about how to sort of accomplish this but
 they are half-baked and convoluted. Also I'm not sure this is
 even really that important.
-* Parsing is pretty dumb. I think a real lexer/parser approach is not 
-appropriate here, but there are definitely better ways to do what I'm doing.
+* Parsing is pretty dumb. It uses complicated and somewhat opaque regexes in places
+where a real lexer/parser approach might be more appropriate, though might also be
+overkill.
 
 ## Project plans
 
 See issue tracker.
+
+## Known issues
+
+* Frepl is only able to correctly classify a subset of legal Fortran. At the same time,
+Frepl will also happily accept some illegal Fortran, and wait for the compiler to tell you
+about the problem. The UX here is not great.
+* When specifying parameter and dimension in a declaration, parameter must currently come first,
+e.g. `integer, parameter, dimension(:) :: a`.
 
 ## Installation
 
