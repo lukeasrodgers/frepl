@@ -2,13 +2,13 @@ module Frepl
   class Classifier
     VARIABLE_NAME_REGEX = /[a-zA-Z][a-zA-Z0-9_]{,30}/
     ASSIGNABLE_VALUE_REGEX = /[^\s]+/
+    TYPE_REGEX = /real|integer|character/
     # TODO: parameter/dimension order shouldn't matter here
-    DECLARATION_REGEX = /\As*(real|integer|type)(\s*,?\s*parameter\s*,\s*)?(\s*,?\s*dimension\([^\)]+\))?\s*(?:::)?\s*(.*)/
+    DECLARATION_REGEX = /\As*(#{TYPE_REGEX})\s*(\((?:kind|len)=\d+\)){,1}+(\s*,?\s*parameter\s*,\s*)?(\s*,?\s*dimension\([^\)]+\))?\s*(?:::)?\s*([^(?:::)]*)/
     ASSIGNMENT_REGEX = /\As*(#{VARIABLE_NAME_REGEX})\s*=\s*(#{ASSIGNABLE_VALUE_REGEX})/
     OLDSKOOL_ARRAY_VALUE_REGEX = /\/[^\]]+\//
     F2003_ARRAY_VALUE_REGEX = /\[[^\]]+\]/
     ARRAY_VALUE_REGEX = /#{OLDSKOOL_ARRAY_VALUE_REGEX}|#{F2003_ARRAY_VALUE_REGEX}/
-    TYPE_REGEX = /real|integer|character/
     FUNCTION_REGEX = /(#{TYPE_REGEX})\s+function\s+(#{VARIABLE_NAME_REGEX})/
     SUBROUTINE_REGEX = /subroutine\s+(#{VARIABLE_NAME_REGEX})/
 
@@ -60,7 +60,7 @@ module Frepl
     def multi_declaration?
       m = current_line.match(DECLARATION_REGEX)
       return false unless m
-      if m[4].gsub(ARRAY_VALUE_REGEX, '').count(',') > 0
+      if m[5].gsub(ARRAY_VALUE_REGEX, '').count(',') > 0
         true
       else
         false
@@ -71,7 +71,7 @@ module Frepl
     def declaration?
       m = current_line.match(DECLARATION_REGEX)
       return false unless m
-      if m[4].gsub(ARRAY_VALUE_REGEX, '').count(',') == 0
+      if m[5].gsub(ARRAY_VALUE_REGEX, '').count(',') == 0
         true
       else
         false

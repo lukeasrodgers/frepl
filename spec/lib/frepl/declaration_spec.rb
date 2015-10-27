@@ -57,6 +57,22 @@ RSpec.describe Frepl::Declaration do
     end
   end
 
+  context 'real with kind' do
+    let(:d) { Frepl::Declaration.new('real(kind=4) :: a = 2.3') }
+
+    it 'extracts variable name' do
+      expect(d.variable_name).to eq('a')
+    end
+
+    it 'has assigned value [1,2,3]' do
+      expect(d.assigned_value).to eq('2.3')
+    end
+
+    it 'has kind' do
+      expect(d.kind).to eq('4')
+    end
+  end
+
   describe '#==' do
     let(:d) { Frepl::Declaration.new('integer a') }
 

@@ -19,6 +19,30 @@ RSpec.describe Frepl::Classifier do
       end
     end
 
+    context 'single real kind declaration with assignment' do
+      let(:line) { 'real(kind=4) :: a = 1.0' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
+
+    context 'single character declaration' do
+      let(:line) { 'character(len=4) name' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
+
+    context 'single character declaration with assignment' do
+      let(:line) { 'character(len=4) :: name = "john"' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
+
     context 'single Fortran 2003 array declaration' do
       let(:line) { 'integer, dimension(3) :: a = [1,2,3]' }
 

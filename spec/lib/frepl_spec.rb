@@ -85,6 +85,20 @@ RSpec.describe Frepl do
       end
     end
 
+    context 'changing the kind of a real' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with(match(/12\.\d{7}\s+/))
+        expect(Frepl).to receive(:output).with(match(/12\.\d{15}\s+/))
+        file = [
+          'real(kind=4) :: a = 3.14',
+          'write(*,*) a * 4',
+          'real(kind=8) :: a = 3.14',
+          'write(*,*) a * 4'
+        ]
+        frepl.run_file(file)
+      end
+    end
+
     context 'redefining a subroutine' do
       it 'works' do
         # TODO shouldn't require this first expectation -- don't do IO
