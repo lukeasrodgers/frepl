@@ -1,6 +1,114 @@
 require 'spec_helper'
 
 RSpec.describe Frepl do
-  describe 'integration specs', type: :integration do
+  let(:frepl) { Frepl::Main.new }
+  describe 'functional specs', type: :functional do
+    context 'basic program' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("           1\n")
+        file = [
+          'integer a',
+          'a = 1',
+          'write(*,*) a'
+        ]
+        frepl.run_file(file)
+      end
+    end
+
+    context 'declaring multiple variables on a single line' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("           6\n")
+        file = [
+          'integer :: a = 2, b = 4',
+          'write(*,*) a + b'
+        ]
+        frepl.run_file(file)
+      end
+    end
+
+    context 'defining a function' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("          12\n")
+        file = [
+          'integer :: a = 8, b = 4',
+            'integer function add(x, y)',
+            'integer, intent(in) :: x, y',
+            'add = x + y',
+          'end function add',
+          'write(*,*) add(a, b)'
+        ]
+        frepl.run_file(file)
+      end
+    end
+
+    context 'redefining the type of a variable' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("   3.40000010    \n")
+        file = [
+          'integer :: a = 8',
+          'a = 3',
+          'real :: a = 3.4',
+          'write(*,*) a'
+        ]
+        frepl.run_file(file)
+      end
+    end
+
+    context 'redefining a scalar to vector' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("           1           2\n")
+        file = [
+          'integer :: a = 8',
+          'a = 3',
+          'integer, dimension(2) :: a = [1,2]',
+          'write(*,*) a'
+        ]
+        frepl.run_file(file)
+      end
+    end
+
+    context 'redefining a function' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("           1\n")
+        file = [
+          'integer function m(x, y)',
+            'integer, intent(in) :: x, y', 
+            'm = x + y',
+          'end function m',
+          'integer function m(x, y)',
+            'integer, intent(in) :: x, y', 
+            'm = x - y',
+          'end function m',
+          'write(*,*) m(3, 2)'
+        ]
+        frepl.run_file(file)
+      end
+    end
+
+    context 'redefining a subroutine' do
+      it 'works' do
+        # TODO shouldn't require this first expectation -- don't do IO
+        # unless last(current) execution is WRITE/PRINT or something
+        expect(Frepl).to receive(:output).with("")
+        expect(Frepl).to receive(:output).with("           1\n")
+        file = [
+          'integer :: a = 1, b = 1, c = 1',
+          'subroutine swap(x, y)',
+            'integer, intent(in) :: x', 
+            'integer, intent(out) :: y',
+            'y = x',
+          'end subroutine swap',
+          'subroutine swap(x, y, z)',
+            'integer, intent(in) :: x', 
+            'integer, intent(out) :: y, z',
+            'y = x',
+            'z = x',
+          'end subroutine swap',
+          'call swap(a, b, c)',
+          'write(*,*) c'
+        ]
+        frepl.run_file(file)
+      end
+    end
   end
 end

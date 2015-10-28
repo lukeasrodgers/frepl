@@ -1,7 +1,11 @@
 module Frepl
   class Assignment < SinglelineStatement
     def variable_name
-      @line.match(/^\s*([a-zA-Z0-9]+)/)[1]
+      @variable_name ||= @line.match(Frepl::Classifier::ASSIGNMENT_REGEX)[1]
+    end
+
+    def assigned_value
+      @assigned_value ||= @line.match(Frepl::Classifier::ASSIGNMENT_REGEX)[2]
     end
 
     def accept(visitor)

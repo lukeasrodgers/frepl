@@ -48,7 +48,7 @@ module Frepl
         f << END_PROGRAM_STATEMENT
       end
       o = `#{Frepl.compiler} frepl_out.f90 -o frepl_out && ./frepl_out`
-      puts o
+      Frepl.output(o)
     end
 
     def add(line_obj)
@@ -58,8 +58,21 @@ module Frepl
       Frepl.log("assignments: #{@assignments}")
     end
 
-    def visit_declaration(d)
-      @declarations << d
+    def visit_declaration(declaration)
+      if i = @declarations.find_index { |d| d == declaration }
+        @declarations[i] = declaration
+        if j = @assignments.find_index { |a| a.variable_name == declaration.variable_name }
+          @assignments.slice!(j)
+        end
+      else
+        @declarations << declaration
+      end
+    end
+
+    def visit_multi_declaration(multi_declaration)
+      multi_declaration.declarations.each do |d|
+        visit_declaration(d)
+      end
     end
 
     def visit_assignment(a)
@@ -81,11 +94,19 @@ module Frepl
     end
 
     def visit_function(fn)
-      @functions << fn
+      if i = @functions.find_index { |f| f == fn }
+        @functions[i] = fn
+      else
+        @functions << fn
+      end
     end
 
     def visit_subroutine(sub)
-      @subroutines << sub
+      if i = @subroutines.find_index { |s| s == sub }
+        @subroutines[i] = sub
+      else
+        @subroutines << sub
+      end
     end
   end
 end
