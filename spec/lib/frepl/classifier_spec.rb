@@ -43,6 +43,14 @@ RSpec.describe Frepl::Classifier do
       end
     end
 
+    context 'single character declaration with assignment, without len' do
+      let(:line) { 'character(4) :: name = "john"' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
+
     context 'single Fortran 2003 array declaration' do
       let(:line) { 'integer, dimension(3) :: a = [1,2,3]' }
 

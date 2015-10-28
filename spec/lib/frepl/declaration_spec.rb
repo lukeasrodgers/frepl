@@ -73,6 +73,74 @@ RSpec.describe Frepl::Declaration do
     end
   end
 
+  context 'real with kind' do
+    let(:d) { Frepl::Declaration.new('real(kind=4) :: a = 2.3') }
+
+    it 'extracts variable name' do
+      expect(d.variable_name).to eq('a')
+    end
+
+    it 'has assigned value [1,2,3]' do
+      expect(d.assigned_value).to eq('2.3')
+    end
+
+    it 'has kind' do
+      expect(d.kind).to eq('4')
+    end
+  end
+
+  context 'character' do
+    context 'with len' do
+      let(:c) { Frepl::Declaration.new('character(len=4) :: name = "luke"') }
+      it 'extracts variable name' do
+        expect(c.variable_name).to eq('name')
+      end
+
+      it 'has assigned value luke' do
+        expect(c.assigned_value).to eq('"luke"')
+      end
+
+      it 'has len' do
+        expect(c.len).to eq('4')
+      end
+    end
+
+    context 'without len' do
+      let(:c) { Frepl::Declaration.new('character(4) :: name = "luke"') }
+      it 'extracts variable name' do
+        expect(c.variable_name).to eq('name')
+      end
+
+      it 'has assigned value luke' do
+        expect(c.assigned_value).to eq('"luke"')
+      end
+
+      it 'has len' do
+        expect(c.len).to eq('4')
+      end
+    end
+
+    context 'assignments designed to trick regex' do
+      it 'works with equals' do
+        d = Frepl::Declaration.new('character(4) :: x = "\'="')
+        expect(d.assigned_value).to eq('"\'="')
+        expect(d.len).to eq('4')
+      end
+
+      it 'works with brackets' do
+        d = Frepl::Declaration.new('character(8) :: x = "]s\"')
+        expect(d.assigned_value).to eq('"]s\"')
+        expect(d.len).to eq('8')
+      end
+
+      it 'works with spaces' do
+        d = Frepl::Declaration.new('character(len=7) :: x = "len=  f"')
+        expect(d.assigned_value).to eq('"len=  f"')
+        expect(d.len).to eq('7')
+      end
+    end
+  end
+
   describe '#==' do
     let(:d) { Frepl::Declaration.new('integer a') }
 

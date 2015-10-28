@@ -5,7 +5,7 @@ module Frepl
     ASSIGNABLE_VALUE_REGEX = /[^\s]+/
     TYPE_REGEX = /real|integer|character/
     # TODO: parameter/dimension order shouldn't matter here
-    DECLARATION_REGEX = /\As*(#{TYPE_REGEX})\s*(\((?:kind|len)=\d+\)){,1}+(\s*,?\s*parameter\s*,\s*)?(\s*,?\s*dimension\([^\)]+\))?\s*(?:::)?\s*([^(?:::)]*)/
+    DECLARATION_REGEX = /\As*(#{TYPE_REGEX})\s*(\((?:kind=|len=)?\d+\)){,1}+(\s*,?\s*parameter\s*,\s*)?(\s*,?\s*dimension\([^\)]+\))?\s*(?:::)?\s*([^(?:::)]*)/
     ASSIGNMENT_REGEX = /\As*(#{VARIABLE_NAME_REGEX})\s*=\s*(#{ASSIGNABLE_VALUE_REGEX})/
     OLDSKOOL_ARRAY_VALUE_REGEX = /\/[^\]]+\//
     F2003_ARRAY_VALUE_REGEX = /\[[^\]]+\]/
