@@ -157,7 +157,7 @@ module Frepl
     end
 
     def blank?
-      current_line.match(/\A\s*\n\z/)
+      current_line.match(/\A\s*\z/)
     end
 
     def comment?
