@@ -1,6 +1,7 @@
 module Frepl
   class Classifier
     VARIABLE_NAME_REGEX = /[a-zA-Z][a-zA-Z0-9_]{,30}/
+    # TODO this regex seems incorrect
     ASSIGNABLE_VALUE_REGEX = /[^\s]+/
     TYPE_REGEX = /real|integer|character/
     # TODO: parameter/dimension order shouldn't matter here
