@@ -19,14 +19,15 @@ module Frepl
     def parse
       match_data = line.match(Frepl::Classifier::DECLARATION_REGEX)
       variable_part = match_data[5]
-      variable_data = variable_part.match(/\s*([^\s=])\s*+=*\s*(.*)?/)
+      variable_data = variable_part.match(/\s*(#{Frepl::Classifier::VARIABLE_NAME_REGEX})\s*+=*\s*(.*)?/)
       @variable_name = variable_data[1]
       kind_len = match_data[2]
       if kind_len
-        if kind_len.match(/len/)
-          @len = kind_len.match(/=(\d+)/)[1]
+        value = kind_len.match(/=?(\d+)/)[1]
+        if kind_len.match(/kind/)
+          @kind = value
         else
-          @kind = kind_len.match(/=(\d+)/)[1]
+          @len = value
         end
       end
       @assigned_value = variable_data[2].empty? ? nil : variable_data[2]
