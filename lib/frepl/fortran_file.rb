@@ -77,11 +77,13 @@ module Frepl
 
     def visit_assignment(a)
       @assignments << a
+      e = Execution.new(a.expressionize)
+      visit_execution(e)
       Frepl.log("assignment name: #{a.variable_name}")
     end
 
     def visit_standalone_variable(sv)
-      e = Execution.new("write(*,*) #{sv.variable_name}")
+      e = Execution.new(sv.expressionize)
       visit_execution(e)
     end
 
