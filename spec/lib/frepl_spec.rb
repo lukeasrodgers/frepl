@@ -124,5 +124,17 @@ RSpec.describe Frepl do
         frepl.run_file(file)
       end
     end
+
+    context 'echoing a variable value' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("           1\n")
+        file = [
+          'integer a',
+          'a = 1',
+          'a'
+        ]
+        frepl.run_file(file)
+      end
+    end
   end
 end

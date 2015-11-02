@@ -80,6 +80,11 @@ module Frepl
       Frepl.log("assignment name: #{a.variable_name}")
     end
 
+    def visit_standalone_variable(sv)
+      e = Execution.new("write(*,*) #{sv.variable_name}")
+      visit_execution(e)
+    end
+
     def visit_allocation(a)
       @allocations << a
     end
