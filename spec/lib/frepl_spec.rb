@@ -5,7 +5,7 @@ RSpec.describe Frepl do
   describe 'functional specs', type: :functional do
     context 'basic program' do
       it 'works' do
-        expect(Frepl).to receive(:output).with("           1\n")
+        expect(Frepl).to receive(:output).with("           1\n").twice
         file = [
           'integer a',
           'a = 1',
@@ -43,6 +43,7 @@ RSpec.describe Frepl do
 
     context 'redefining the type of a variable' do
       it 'works' do
+        expect(Frepl).to receive(:output).with("           3\n")
         expect(Frepl).to receive(:output).with("   3.40000010    \n")
         file = [
           'integer :: a = 8',
@@ -56,6 +57,7 @@ RSpec.describe Frepl do
 
     context 'redefining a scalar to vector' do
       it 'works' do
+        expect(Frepl).to receive(:output).with("           3\n")
         expect(Frepl).to receive(:output).with("           1           2\n")
         file = [
           'integer :: a = 8',
@@ -120,6 +122,18 @@ RSpec.describe Frepl do
           'end subroutine swap',
           'call swap(a, b, c)',
           'write(*,*) c'
+        ]
+        frepl.run_file(file)
+      end
+    end
+
+    context 'echoing a variable value' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("           1\n").twice
+        file = [
+          'integer a',
+          'a = 1',
+          'a'
         ]
         frepl.run_file(file)
       end

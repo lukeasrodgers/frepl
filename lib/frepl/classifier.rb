@@ -88,7 +88,11 @@ module Frepl
     end
 
     def assignment?
-      current_line.match(VARIABLE_NAME_REGEX)
+      current_line.match(ASSIGNMENT_REGEX)
+    end
+
+    def standalone_variable?
+      current_line.match(/\A#{VARIABLE_NAME_REGEX}\z/)
     end
 
     def indentation_level
@@ -126,6 +130,8 @@ module Frepl
         Assignment.new(line)
       elsif allocation?
         Allocation.new(line)
+      elsif standalone_variable?
+        StandaloneVariable.new(line)
       elsif ignorable?
         nil
       else

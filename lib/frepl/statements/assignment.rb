@@ -8,6 +8,10 @@ module Frepl
       @assigned_value ||= @line.match(Frepl::Classifier::ASSIGNMENT_REGEX)[2]
     end
 
+    def expressionize
+      "write(*,*) #{variable_name}"
+    end
+
     def accept(visitor)
       visitor.visit_assignment(self)
     end

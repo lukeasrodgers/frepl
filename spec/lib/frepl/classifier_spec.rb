@@ -90,5 +90,13 @@ RSpec.describe Frepl::Classifier do
         expect(classifier.classify(line)).to be_a(Frepl::MultiDeclaration)
       end
     end
+
+    context 'lone variable name' do
+      let(:line) { 'foobar' }
+
+      it 'returns a standalone variable' do
+        expect(classifier.classify(line)).to be_a(Frepl::StandaloneVariable)
+      end
+    end
   end
 end
