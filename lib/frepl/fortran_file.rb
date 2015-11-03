@@ -45,6 +45,7 @@ module Frepl
             f.write(fn.output)
           end
         end
+
         f << END_PROGRAM_STATEMENT
       end
       o = `#{Frepl.compiler} frepl_out.f90 -o frepl_out && ./frepl_out`
@@ -114,6 +115,16 @@ module Frepl
       else
         @subroutines << sub
       end
+    end
+
+    def visit_ifstatement(i)
+      e = Execution.new(i.output)
+      visit_execution(e)
+    end
+
+    def visit_do_loop(d)
+      e = Execution.new(d.output)
+      visit_execution(e)
     end
   end
 end
