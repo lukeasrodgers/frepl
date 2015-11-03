@@ -3,7 +3,7 @@ module Frepl
     VARIABLE_NAME_REGEX = /[a-zA-Z][a-zA-Z0-9_]{,30}/
     # TODO this regex seems incorrect
     ASSIGNABLE_VALUE_REGEX = /[^\s]+/
-    TYPE_REGEX = /real|integer|character/
+    TYPE_REGEX = /real|integer|character|logical/
     # TODO: parameter/dimension order shouldn't matter here
     DECLARATION_REGEX = /\As*(#{TYPE_REGEX})\s*(\((?:kind=|len=)?\d+\)){,1}+(\s*,?\s*parameter\s*,\s*)?(\s*,?\s*dimension\([^\)]+\))?\s*(?:::)?\s*([^(?:::)]*)/
     ASSIGNMENT_REGEX = /\As*(#{VARIABLE_NAME_REGEX})\s*=\s*(#{ASSIGNABLE_VALUE_REGEX})/
@@ -12,6 +12,7 @@ module Frepl
     ARRAY_VALUE_REGEX = /#{OLDSKOOL_ARRAY_VALUE_REGEX}|#{F2003_ARRAY_VALUE_REGEX}/
     FUNCTION_REGEX = /(#{TYPE_REGEX})\s+function\s+(#{VARIABLE_NAME_REGEX})/
     SUBROUTINE_REGEX = /subroutine\s+(#{VARIABLE_NAME_REGEX})/
+    IF_STATEMENT_REGEX = /if\s+\([^\)]+\)\sthen/i
 
     def initialize
       @all_lines = []
@@ -50,7 +51,7 @@ module Frepl
     end
 
     def multiline?(line)
-      line.match(/subroutine|function/) || @current_multiline_obj != nil
+      line.match(/\Asubroutine|function|(?:#{IF_STATEMENT_REGEX})\z/i) || @current_multiline_obj != nil
     end
 
     def repl_command?
@@ -112,6 +113,8 @@ module Frepl
           @current_multiline_obj = Function.new
         elsif line.match(/subroutine/)
           @current_multiline_obj = Subroutine.new
+        elsif line.match(IF_STATEMENT_REGEX)
+          @current_multiline_obj = IfStatement.new
         end
       end
       @current_multiline_obj.lines << line

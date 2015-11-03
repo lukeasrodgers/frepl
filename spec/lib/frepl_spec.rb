@@ -138,5 +138,18 @@ RSpec.describe Frepl do
         frepl.run_file(file)
       end
     end
+
+    context 'with an if statement' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("           1\n")
+        file = [
+          'logical :: check = .true.',
+          'if (check .EQV. .TRUE.) then',
+            'write(*,*) 1',
+          'end if'
+        ]
+        frepl.run_file(file)
+      end
+    end
   end
 end

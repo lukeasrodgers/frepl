@@ -89,6 +89,18 @@ RSpec.describe Frepl::Declaration do
     end
   end
 
+  context 'logical' do
+    let(:d) { Frepl::Declaration.new('logical :: cond = .FALSE.') }
+
+    it 'extracts variable name' do
+      expect(d.variable_name).to eq('cond')
+    end
+
+    it 'has assigned value .FALSE.' do
+      expect(d.assigned_value).to eq('.FALSE.')
+    end
+  end
+
   context 'character' do
     context 'with len' do
       let(:c) { Frepl::Declaration.new('character(len=4) :: name = "luke"') }

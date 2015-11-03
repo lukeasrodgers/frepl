@@ -67,6 +67,14 @@ RSpec.describe Frepl::Classifier do
       end
     end
 
+    context 'logical declaration' do
+      let(:line) { 'logical :: somecond = .TRUE.' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
+
     context 'multiple integer declaration' do
       let(:line) { 'real :: a, b, c' }
 
@@ -96,6 +104,14 @@ RSpec.describe Frepl::Classifier do
 
       it 'returns a standalone variable' do
         expect(classifier.classify(line)).to be_a(Frepl::StandaloneVariable)
+      end
+    end
+
+    context 'start of if statement' do
+      let(:line) { 'if (9 < 10) then' }
+
+      it 'returns an IfStatement' do
+        expect(classifier.classify(line)).to be_a(Frepl::IfStatement)
       end
     end
   end
