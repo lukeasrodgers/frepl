@@ -114,5 +114,13 @@ RSpec.describe Frepl::Classifier do
         expect(classifier.classify(line)).to be_a(Frepl::IfStatement)
       end
     end
+
+    context 'start of do loop' do
+      let(:line) { 'do i = 1, 3' }
+
+      it 'returns an DoLoop' do
+        expect(classifier.classify(line)).to be_a(Frepl::DoLoop)
+      end
+    end
   end
 end

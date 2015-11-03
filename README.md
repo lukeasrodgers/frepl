@@ -30,6 +30,8 @@ Frepl will also happily accept some illegal Fortran, and wait for the compiler t
 about the problem. The UX here is not great.
 * When specifying parameter and dimension in a declaration, parameter must currently come first,
 e.g. `integer, parameter, dimension(:) :: a`.
+* only `do... end do` loops are supported
+* no support for labels; hence, no GOTO and its ilk
 
 ## Installation
 

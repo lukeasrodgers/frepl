@@ -121,5 +121,10 @@ module Frepl
       e = Execution.new(i.output)
       visit_execution(e)
     end
+
+    def visit_do_loop(d)
+      e = Execution.new(d.output)
+      visit_execution(e)
+    end
   end
 end

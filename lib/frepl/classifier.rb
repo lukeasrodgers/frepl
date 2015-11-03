@@ -13,6 +13,7 @@ module Frepl
     FUNCTION_REGEX = /(#{TYPE_REGEX})\s+function\s+(#{VARIABLE_NAME_REGEX})/
     SUBROUTINE_REGEX = /subroutine\s+(#{VARIABLE_NAME_REGEX})/
     IF_STATEMENT_REGEX = /if\s+\([^\)]+\)\sthen/i
+    DO_LOOP_REGEX = /do\s+[^,]+,.+/i
 
     def initialize
       @all_lines = []
@@ -51,7 +52,7 @@ module Frepl
     end
 
     def multiline?(line)
-      line.match(/\Asubroutine|function|(?:#{IF_STATEMENT_REGEX})\z/i) || @current_multiline_obj != nil
+      line.match(/\Asubroutine|function|(?:#{IF_STATEMENT_REGEX})|(?:#{DO_LOOP_REGEX})\z/i) || @current_multiline_obj != nil
     end
 
     def repl_command?
@@ -115,6 +116,8 @@ module Frepl
           @current_multiline_obj = Subroutine.new
         elsif line.match(IF_STATEMENT_REGEX)
           @current_multiline_obj = IfStatement.new
+        elsif line.match(DO_LOOP_REGEX)
+          @current_multiline_obj = DoLoop.new
         end
       end
       @current_multiline_obj.lines << line

@@ -151,5 +151,18 @@ RSpec.describe Frepl do
         frepl.run_file(file)
       end
     end
+
+    context 'with a do loop' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("           1\n           2\n           3\n")
+        file = [
+          'integer i',
+          'do i = 1, 3 ',
+            'write(*,*) i',
+          'end do'
+        ]
+        frepl.run_file(file)
+      end
+    end
   end
 end
