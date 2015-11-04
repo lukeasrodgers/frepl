@@ -164,5 +164,23 @@ RSpec.describe Frepl do
         frepl.run_file(file)
       end
     end
+
+    context 'with a derived type' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("   3.40000010    \n")
+        expect(Frepl).to receive(:output).with("   4.05000019    \n")
+        expect(Frepl).to receive(:output).with("   3.40000010       4.05000019    \n")
+        file = [
+          'type point',
+            'real :: x, y',
+          'end type point',
+          'type (point) p1',
+          'p1%x = 3.4',
+          'p1%y = 4.05',
+          'write(*,*) p1'
+        ]
+        frepl.run_file(file)
+      end
+    end
   end
 end

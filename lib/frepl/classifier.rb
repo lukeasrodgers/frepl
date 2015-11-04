@@ -1,16 +1,20 @@
 module Frepl
   class Classifier
     VARIABLE_NAME_REGEX = /[a-zA-Z][a-zA-Z0-9_]{,30}/
-    # TODO this regex seems incorrect
+    # TODO this regex seems incorrect, e.g. assignable value can't start with most punctuation
     ASSIGNABLE_VALUE_REGEX = /[^\s]+/
-    TYPE_REGEX = /real|integer|character|logical/
+    DERIVED_TYPE_IDENTIFIER_REGEX = /\(#{VARIABLE_NAME_REGEX}\)/
+    DERIVED_TYPE_REGEX = /type\s+(#{VARIABLE_NAME_REGEX})/i
+    BUILTIN_TYPE_REGEX = /real|integer|character|logical/i
+    DECLARABLE_TYPE_REGEX = /#{BUILTIN_TYPE_REGEX}|type\s\(#{VARIABLE_NAME_REGEX}\)\s/i
     # TODO: parameter/dimension order shouldn't matter here
-    DECLARATION_REGEX = /\As*(#{TYPE_REGEX})\s*(\((?:kind=|len=)?\d+\)){,1}+(\s*,?\s*parameter\s*,\s*)?(\s*,?\s*dimension\([^\)]+\))?\s*(?:::)?\s*([^(?:::)]*)/
-    ASSIGNMENT_REGEX = /\As*(#{VARIABLE_NAME_REGEX})\s*=\s*(#{ASSIGNABLE_VALUE_REGEX})/
+    DECLARATION_REGEX = /\As*(#{DECLARABLE_TYPE_REGEX})\s*(\((?:kind=|len=)?\d+\)){,1}+(\s*,?\s*parameter\s*,\s*)?(\s*,?\s*dimension\([^\)]+\))?\s*(?:::)?\s*([^(?:::)]*)/
+    ASSIGNABLE_REGEX = /#{VARIABLE_NAME_REGEX}|#{VARIABLE_NAME_REGEX}%#{VARIABLE_NAME_REGEX}/
+    ASSIGNMENT_REGEX = /\As*(#{ASSIGNABLE_REGEX})\s*=\s*(#{ASSIGNABLE_VALUE_REGEX})/
     OLDSKOOL_ARRAY_VALUE_REGEX = /\/[^\]]+\//
     F2003_ARRAY_VALUE_REGEX = /\[[^\]]+\]/
     ARRAY_VALUE_REGEX = /#{OLDSKOOL_ARRAY_VALUE_REGEX}|#{F2003_ARRAY_VALUE_REGEX}/
-    FUNCTION_REGEX = /(#{TYPE_REGEX})\s+function\s+(#{VARIABLE_NAME_REGEX})/
+    FUNCTION_REGEX = /(#{BUILTIN_TYPE_REGEX})\s+function\s+(#{VARIABLE_NAME_REGEX})/
     SUBROUTINE_REGEX = /subroutine\s+(#{VARIABLE_NAME_REGEX})/
     IF_STATEMENT_REGEX = /if\s+\([^\)]+\)\sthen/i
     DO_LOOP_REGEX = /do\s+[^,]+,.+/i
@@ -52,7 +56,7 @@ module Frepl
     end
 
     def multiline?(line)
-      line.match(/\Asubroutine|function|(?:#{IF_STATEMENT_REGEX})|(?:#{DO_LOOP_REGEX})\z/i) || @current_multiline_obj != nil
+      line.match(/\Asubroutine|function|(?:#{IF_STATEMENT_REGEX})|(?:#{DO_LOOP_REGEX})|(?:#{DERIVED_TYPE_REGEX})\z/i) || @current_multiline_obj != nil
     end
 
     def repl_command?
@@ -118,6 +122,8 @@ module Frepl
           @current_multiline_obj = IfStatement.new
         elsif line.match(DO_LOOP_REGEX)
           @current_multiline_obj = DoLoop.new
+        elsif line.match(/\A#{DERIVED_TYPE_REGEX}\z/)
+          @current_multiline_obj = DerivedType.new
         end
       end
       @current_multiline_obj.lines << line
