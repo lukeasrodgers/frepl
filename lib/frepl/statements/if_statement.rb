@@ -1,7 +1,7 @@
 module Frepl
   class IfStatement < MultilineStatement
     def terminal_regex
-      /\Aend if\z/
+      /\Aend\s?if\z/
     end
 
     def accept(visitor)
