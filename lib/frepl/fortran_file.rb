@@ -7,6 +7,7 @@ module Frepl
 
     def initialize
       @declarations = []
+      @derived_types = []
       @assignments = []
       @execution = nil
       @allocations = []
@@ -19,8 +20,13 @@ module Frepl
         f << BEGIN_PROGRAM_STATEMENT
         f << IMPLICIT_STATEMENT
 
+        @derived_types.each do |dt|
+          f.write(dt.output)
+        end
+
         @declarations.each do |d|
-          f.write(d.output) end
+          f.write(d.output)
+        end
 
         @allocations.each do |a|
           f.write(a.output)
@@ -125,6 +131,14 @@ module Frepl
     def visit_do_loop(d)
       e = Execution.new(d.output)
       visit_execution(e)
+    end
+
+    def visit_derived_type(dt)
+      if i = @derived_types.find_index { |v| v == dt }
+        @derived_types[i] = dt
+      else
+        @derived_types << dt
+      end
     end
   end
 end
