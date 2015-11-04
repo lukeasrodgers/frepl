@@ -76,4 +76,48 @@ RSpec.describe Frepl::MultiDeclaration do
       expect(d3.output).to eq("integer :: c\n")
     end
   end
+
+  context 'deferred shape pointer array' do
+    let(:d) { Frepl::MultiDeclaration.new('integer, dimension(:), pointer :: row, col') }
+
+    it 'extracts variable names' do
+      expect(d.variable_names).to eq(['row', 'col'])
+    end
+
+    it 'correctly generates declaration types' do
+      expect(d.declarations.map(&:type)).to eq(['integer', 'integer'])
+    end
+
+    it 'correctly generates declaration assignments' do
+      d1, d2 = d.declarations
+      expect(d1.variable_name).to eq('row')
+      expect(d1.assigned_value).to be_nil
+      expect(d1.output).to eq("integer, dimension(:), pointer :: row\n")
+      expect(d2.variable_name).to eq('col')
+      expect(d2.assigned_value).to be_nil
+      expect(d2.output).to eq("integer, dimension(:), pointer :: col\n")
+    end
+  end
+
+  context 'targetable arrays' do
+    let(:d) { Frepl::MultiDeclaration.new('integer, dimension(2), target :: a, b') }
+
+    it 'extracts variable names' do
+      expect(d.variable_names).to eq(['a', 'b'])
+    end
+
+    it 'correctly generates declaration types' do
+      expect(d.declarations.map(&:type)).to eq(['integer', 'integer'])
+    end
+
+    it 'correctly generates declaration assignments' do
+      d1, d2 = d.declarations
+      expect(d1.variable_name).to eq('a')
+      expect(d1.assigned_value).to be_nil
+      expect(d1.output).to eq("integer, dimension(2), target :: a\n")
+      expect(d2.variable_name).to eq('b')
+      expect(d2.assigned_value).to be_nil
+      expect(d2.output).to eq("integer, dimension(2), target :: b\n")
+    end
+  end
 end

@@ -138,5 +138,21 @@ RSpec.describe Frepl::Classifier do
         expect(classifier.classify(line)).to be_a(Frepl::DoLoop)
       end
     end
+
+    context 'targetable array declaration' do
+      let(:line) { 'real, dimension(m,n), target :: A' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
+
+    context 'pointer array declaration' do
+      let(:line) { 'real, dimension(:), pointer:: A' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
   end
 end

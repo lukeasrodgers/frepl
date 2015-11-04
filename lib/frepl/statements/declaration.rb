@@ -14,11 +14,19 @@ module Frepl
       end
     end
 
+    def target?
+      @target != nil
+    end
+
+    def pointer?
+      @pointer != nil
+    end
+
     private
     
     def parse
       match_data = line.match(Frepl::Classifier::DECLARATION_REGEX)
-      variable_part = match_data[5]
+      variable_part = match_data[7]
       variable_data = variable_part.match(/\s*(#{Frepl::Classifier::VARIABLE_NAME_REGEX})\s*+=*\s*(.*)?/)
       @variable_name = variable_data[1]
       kind_len = match_data[2]
@@ -32,6 +40,8 @@ module Frepl
       end
       @assigned_value = variable_data[2].empty? ? nil : variable_data[2]
       @type = match_data[1]
+      @target = match_data[5]
+      @pointer = match_data[6]
     end
   end
 end

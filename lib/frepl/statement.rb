@@ -53,11 +53,27 @@ module Frepl
     end
 
     def incomplete?
-      !@lines.last.match(terminal_regex)
+      !complete?
+    end
+
+    def complete?
+      @lines.last.match(terminal_regex) != nil && !nested?
     end
 
     def terminal_regex
       raise NotImplementedError
+    end
+
+    private
+
+    def starting_regex
+      raise NotImplementedError
+    end
+
+    def nested?
+      start_count = lines.select { |line| line.match(/\A\s*#{starting_regex}\z/) != nil }.count
+      end_count = lines.select { |line| line.match(/\A\s*#{terminal_regex}\z/) != nil }.count
+      start_count > end_count
     end
   end
 end

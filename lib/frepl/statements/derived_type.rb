@@ -1,7 +1,7 @@
 module Frepl
   class DerivedType < MultilineStatement
     def terminal_regex
-      /end type/
+      /end type\s*#{Frepl::Classifier::VARIABLE_NAME_REGEX}/
     end
 
     def accept(visitor)
@@ -18,6 +18,12 @@ module Frepl
       else
         super(other)
       end
+    end
+
+    private
+
+    def starting_regex
+      Frepl::Classifier::DERIVED_TYPE_REGEX
     end
   end
 end

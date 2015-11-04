@@ -19,5 +19,11 @@ module Frepl
         super(other)
       end
     end
+    
+    private
+
+    def starting_regex
+      Frepl::Classifier::FUNCTION_REGEX
+    end
   end
 end

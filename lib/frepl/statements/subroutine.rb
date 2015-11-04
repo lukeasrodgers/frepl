@@ -1,7 +1,7 @@
 module Frepl
   class Subroutine < MultilineStatement
     def terminal_regex
-      /end subroutine/
+      /end subroutine\s?#{Frepl::Classifier::VARIABLE_NAME_REGEX}/
     end
 
     def accept(visitor)
@@ -18,6 +18,12 @@ module Frepl
       else
         super(other)
       end
+    end
+
+    private
+
+    def starting_regex
+      Frepl::Classifier::SUBROUTINE_REGEX
     end
   end
 end

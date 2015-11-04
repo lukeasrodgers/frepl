@@ -151,6 +151,30 @@ RSpec.describe Frepl::Declaration do
         expect(d.len).to eq('7')
       end
     end
+
+    context 'targetable array' do
+      let(:c) { Frepl::Declaration.new('real, dimension(m,n), target :: A') }
+
+      it 'extracts variable name' do
+        expect(c.variable_name).to eq('A')
+      end
+
+      it 'knows it is a pointer target' do
+        expect(c.target?).to be true
+      end
+    end
+
+    context 'pointer' do
+      let(:c) { Frepl::Declaration.new('real, dimension(:), pointer:: b') }
+
+      it 'extracts variable name' do
+        expect(c.variable_name).to eq('b')
+      end
+
+      it 'knows it is a pointer' do
+        expect(c.pointer?).to be true
+      end
+    end
   end
 
   describe '#==' do
