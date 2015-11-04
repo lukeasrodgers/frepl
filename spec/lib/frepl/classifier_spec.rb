@@ -27,6 +27,22 @@ RSpec.describe Frepl::Classifier do
       end
     end
 
+    context 'parameter dp declaration' do
+      let(:line) { 'integer, parameter :: dp=kind(1.0d0)' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
+
+    context 'real declaration using dp parameter' do
+      let(:line) { 'real(kind=dp) fk' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
+
     context 'single character declaration' do
       let(:line) { 'character(len=4) name' }
 

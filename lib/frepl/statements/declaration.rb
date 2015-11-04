@@ -23,7 +23,7 @@ module Frepl
       @variable_name = variable_data[1]
       kind_len = match_data[2]
       if kind_len
-        value = kind_len.match(/=?(\d+)/)[1]
+        value = kind_len.match(/=?+([^=\(\)(?:kind|len)]+)/)[1]
         if kind_len.match(/kind/)
           @kind = value
         else
