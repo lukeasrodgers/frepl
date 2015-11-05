@@ -12,6 +12,8 @@ module Frepl
         str << "#{@kind_len}" if @kind_len
         str << "#{@parameter}" if @parameter
         str << "#{@dimension}" if @dimension
+        str << "#{@target}" if @target
+        str << "#{@pointer}" if @pointer
         str << " :: #{varpart}"
         Declaration.new(str)
       end
@@ -33,14 +35,16 @@ module Frepl
       end
       @parameter = match_data[3]
       @dimension = match_data[4]
-      @variable_names = match_data[5].gsub(/\s*=\s*/, '=').scan(Frepl::Classifier::VARIABLE_NAME_REGEX)
-      @variable_assignments = match_data[5].gsub(/\s*=\s*/, '=').
+      @target = match_data[5]
+      @pointer = match_data[6]
+      @variable_names = match_data[7].gsub(/\s*=\s*/, '=').scan(Frepl::Classifier::VARIABLE_NAME_REGEX)
+      @variable_assignments = match_data[7].gsub(/\s*=\s*/, '=').
         split(Frepl::Classifier::VARIABLE_NAME_REGEX)[1..-1].
         map { |a| a.gsub(/,\s*$/, '') }
       if @variable_assignments && @variable_assignments.any?
         if @variable_assignments.size < @variable_names.size
           # e.g., integer :: a = 1, b, c
-          mask = match_data[5].gsub(/\s*=\s*/, '=').
+          mask = match_data[7].gsub(/\s*=\s*/, '=').
             scan(/#{Frepl::Classifier::VARIABLE_NAME_REGEX}[=,$\z]?/).
             map { |x| x.match(/=/) ? '=' : '' }
           arr = []

@@ -8,7 +8,7 @@ module Frepl
     BUILTIN_TYPE_REGEX = /real|integer|character|logical/i
     DECLARABLE_TYPE_REGEX = /#{BUILTIN_TYPE_REGEX}|type\s\(#{VARIABLE_NAME_REGEX}\)\s/i
     # TODO: parameter/dimension order shouldn't matter here
-    DECLARATION_REGEX = /\As*(#{DECLARABLE_TYPE_REGEX})\s*(\((?:kind=|len=)*[^\(\)]+\)){,1}+(\s*,?\s*parameter\s*,?\s*)?(\s*,?\s*dimension\([^\)]+\))?\s*(?:::)?\s*([^(?:::)]*)/
+    DECLARATION_REGEX = /\As*(#{DECLARABLE_TYPE_REGEX})\s*(\((?:kind=|len=)*[^\(\)]+\)){,1}+(\s*,?\s*parameter\s*,?\s*)?(\s*,?\s*dimension\([^\)]+\))?(\s*,?\s*target)?(\s*,?\s*pointer)?\s*(?:::)?\s*([^(?:::)]*)/
     ASSIGNABLE_REGEX = /#{VARIABLE_NAME_REGEX}|#{VARIABLE_NAME_REGEX}%#{VARIABLE_NAME_REGEX}/
     ASSIGNMENT_REGEX = /\As*(#{ASSIGNABLE_REGEX})\s*=\s*(#{ASSIGNABLE_VALUE_REGEX})/
     OLDSKOOL_ARRAY_VALUE_REGEX = /\/[^\]]+\//
@@ -67,7 +67,7 @@ module Frepl
     def multi_declaration?
       m = current_line.match(DECLARATION_REGEX)
       return false unless m
-      if m[5].gsub(ARRAY_VALUE_REGEX, '').count(',') > 0
+      if m[7].gsub(ARRAY_VALUE_REGEX, '').count(',') > 0
         true
       else
         false
@@ -78,7 +78,7 @@ module Frepl
     def declaration?
       m = current_line.match(DECLARATION_REGEX)
       return false unless m
-      if m[5].gsub(ARRAY_VALUE_REGEX, '').count(',') == 0
+      if m[7].gsub(ARRAY_VALUE_REGEX, '').count(',') == 0
         true
       else
         false

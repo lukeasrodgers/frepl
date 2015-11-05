@@ -182,5 +182,41 @@ RSpec.describe Frepl do
         frepl.run_file(file)
       end
     end
+
+    context 'with multidimensional targetable array and pointers to said array' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("   1.00000000       2.00000000       3.00000000       4.00000000    \n")
+        expect(Frepl).to receive(:output).with("   1.00000000    \n   3.00000000    \n   2.00000000    \n   4.00000000    \n")
+        file = [
+          'integer i, j',
+          'integer, parameter :: m = 2, n = 2',
+          'real, dimension(m,n), target :: A',
+          'real, dimension(:), pointer:: row, column',
+          'a = reshape(([1,2,3,4]), ([2,2]))',
+          'do i = 1, 2',
+            'do j = 1, 2',
+              'write(*,*) a(i,j)',
+            'end do',
+          'end do'
+        ]
+        frepl.run_file(file)
+      end
+    end
+
+    context 'with deeply nested if statements' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("           4\n")
+        file = [
+          'if (1 < 2) then',
+            'if (2 < 3) then',
+              'if (3 < 4) then',
+                'write(*,*) 4',
+              'endif',
+            'endif',
+          'endif'
+        ]
+        frepl.run_file(file)
+      end
+    end
   end
 end
