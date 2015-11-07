@@ -1,3 +1,5 @@
+require 'active_support/core_ext/string'
+
 module Frepl
   class FortranFile
     BEGIN_PROGRAM_STATEMENT = "program frepl_out\n"
@@ -6,6 +8,7 @@ module Frepl
     IMPLICIT_STATEMENT = "  implicit none\n"
 
     def initialize
+      @all_statements = []
       @declarations = []
       @derived_types = []
       @assignments = []
@@ -60,9 +63,16 @@ module Frepl
 
     def add(line_obj)
       line_obj.accept(self)
+      @all_statements << line_obj
       Frepl.log("added")
       Frepl.log("declarations: #{@declarations}")
       Frepl.log("assignments: #{@assignments}")
+    end
+
+    def undo_last!
+      last_statement = @all_statements.last
+      ivar = instance_variable_get("@#{last_statement.class.to_s.demodulize.underscore.pluralize}")
+      ivar.pop
     end
 
     def visit_declaration(declaration)
