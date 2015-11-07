@@ -65,6 +65,50 @@ You will get a prompt, and you can just start typing Fortran, type `q` to quit.
 > q
 ```
 
+### Redefine a function, change the type of a variable, etc.
+
+```
+> integer :: a = 1
+> a = 3
+           3
+> real a
+> a = 5
+   5.00000000
+> integer function sum(a, b)
+>   integer, intent(in) :: a, b
+>   sum = a + b
+>   end function
+> write(*,*) sum(1,2)
+           3
+> real function sum(a, b, c)
+>   real, intent(in) :: a, b, c
+>   sum = a + b + c
+>   end function
+> write(*,*) sum(1.0,2.9,3.4)
+   7.30000019
+>
+```
+
+### Undo the last statement
+
+Type `f:z` (z as in cmd+z for undo). Handy when you made an error, e.g.
+
+```
+> integer :: a =3
+> real :: b
+> b = 'fo'
+frepl_out.f90:5.4:
+
+b = 'fo'
+    1
+Error: Can't convert CHARACTER(1) to REAL(4) at (1)
+
+> f:z
+> b = 3.4
+   3.40000010
+>
+```
+
 You can see some repl commands by typing `f:help`. Not much going on there, currently.
 
 ## Contributing

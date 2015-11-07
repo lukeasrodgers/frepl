@@ -17,6 +17,12 @@ module Frepl
             puts "f:#{k} -- #{v[:info]}"
           end
         end
+      },
+      'z' => {
+        info: 'Undo last statement',
+        l: lambda do |file|
+          file.undo_last!
+        end
       }
     }
 

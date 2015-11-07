@@ -218,5 +218,22 @@ RSpec.describe Frepl do
         frepl.run_file(file)
       end
     end
+
+    context 'resetting the last statement' do
+      it 'works' do
+        frepl
+        Frepl.debug = true
+        expect(Frepl).to receive(:output)
+        expect(Frepl).to receive(:output).with("           2\n")
+        file = [
+          'integer a',
+          'b = 2',
+          'f:z',
+          'integer :: b = 2',
+          'b'
+        ]
+        frepl.run_file(file)
+      end
+    end
   end
 end
