@@ -233,5 +233,24 @@ RSpec.describe Frepl do
         frepl.run_file(file)
       end
     end
+
+    context 'where statement' do
+      it 'works' do
+        expect(Frepl).to receive(:output).with("           1           2           3           4           5           6           7           8           9          10\n")
+        expect(Frepl).to receive(:output).with("           0           0           0           0           0           1           1           1           1           1\n")
+        file = [
+          'integer, dimension(10) :: a, b',
+          'integer i',
+          'a = ([ (i, i=1,10) ])',
+          'where (a > 5)',
+            'b = 1.',
+          'elsewhere',
+            'b = 0.',
+          'end where',
+          'b'
+        ]
+        frepl.run_file(file)
+      end
+    end
   end
 end
