@@ -14,8 +14,8 @@ module Frepl
     OLDSKOOL_ARRAY_VALUE_REGEX = /\/[^\]]+\//
     F2003_ARRAY_VALUE_REGEX = /\[[^\]]+\]/
     ARRAY_VALUE_REGEX = /#{OLDSKOOL_ARRAY_VALUE_REGEX}|#{F2003_ARRAY_VALUE_REGEX}/
-    FUNCTION_REGEX = /(#{BUILTIN_TYPE_REGEX})\s+function\s+(#{VARIABLE_NAME_REGEX})/
-    SUBROUTINE_REGEX = /subroutine\s+(#{VARIABLE_NAME_REGEX})/
+    FUNCTION_REGEX = /(#{BUILTIN_TYPE_REGEX})\s+function\s+(#{VARIABLE_NAME_REGEX})/i
+    SUBROUTINE_REGEX = /subroutine\s+(#{VARIABLE_NAME_REGEX})/i
     IF_STATEMENT_REGEX = /if\s+\(.+\)\sthen/i
     DO_LOOP_REGEX = /do\s+[^,]+,.+/i
 
