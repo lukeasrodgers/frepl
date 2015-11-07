@@ -16,6 +16,7 @@ module Frepl
       @allocations = []
       @subroutines = []
       @functions = []
+      @wheres = []
     end
 
     def run
@@ -141,6 +142,10 @@ module Frepl
     def visit_do_loop(d)
       e = Execution.new(d.output)
       visit_execution(e)
+    end
+
+    def visit_where(w)
+      @assignments << w
     end
 
     def visit_derived_type(dt)

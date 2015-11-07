@@ -18,6 +18,7 @@ module Frepl
     SUBROUTINE_REGEX = /subroutine\s+(#{VARIABLE_NAME_REGEX})/i
     IF_STATEMENT_REGEX = /if\s+\(.+\)\sthen/i
     DO_LOOP_REGEX = /do\s+[^,]+,.+/i
+    WHERE_REGEX = /where\s+\([^\)]+\)\s*/i
 
     def initialize
       @all_lines = []
@@ -56,7 +57,7 @@ module Frepl
     end
 
     def multiline?(line)
-      line.match(/\Asubroutine|function|(?:#{IF_STATEMENT_REGEX})|(?:#{DO_LOOP_REGEX})|(?:#{DERIVED_TYPE_REGEX})\z/i) || @current_multiline_obj != nil
+      line.match(/\Asubroutine|function|(?:#{IF_STATEMENT_REGEX})|(?:#{DO_LOOP_REGEX})|(?:#{DERIVED_TYPE_REGEX})|(?:#{WHERE_REGEX})\z/i) || @current_multiline_obj != nil
     end
 
     def repl_command?
@@ -124,6 +125,8 @@ module Frepl
           @current_multiline_obj = DoLoop.new
         elsif line.match(/\A#{DERIVED_TYPE_REGEX}\z/)
           @current_multiline_obj = DerivedType.new
+        elsif line.match(/\A#{WHERE_REGEX}\z/)
+          @current_multiline_obj = Where.new
         end
       end
       @current_multiline_obj.lines << line
