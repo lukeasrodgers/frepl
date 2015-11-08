@@ -46,6 +46,7 @@ module Frepl
 
     def interrupt
       @current_multiline_obj = nil
+      @current_lines = []
     end
 
     def executable?

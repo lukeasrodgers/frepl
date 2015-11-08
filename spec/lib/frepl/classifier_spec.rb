@@ -155,4 +155,17 @@ RSpec.describe Frepl::Classifier do
       end
     end
   end
+
+  describe 'interruption' do
+    context 'in the middle of a multi-line statement' do
+      it 'should be able to be interrupted and start anew' do
+        classifier.classify('integer function add(a, b')
+        classifier.interrupt
+        classifier.classify('integer function sum(a, b')
+        classifier.classify('integer :: a, b')
+        classifier.classify('sum = a + b')
+        expect(classifier.classify('end function sum').complete?).to be true
+      end
+    end
+  end
 end
