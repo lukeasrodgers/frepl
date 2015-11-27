@@ -12,7 +12,7 @@ installed.
 
 Frepl differs from some other Fortran REPLs (e.g. [Fytran](https://github.com/kvoss/fytran)) in that
 rather than typing a whole program then running a separate compile command, Frepl compiles and
-runs your code each time you hit <ENTER>, and generally tries to treat your input as an
+runs your code each time you hit ENTER, and generally tries to treat your input as an
 expression, and echo the result of evaluating it, like many REPLs for dynamic languages.
 
 The goal of this design is to provide instant feedback and also permit the user to quickly
