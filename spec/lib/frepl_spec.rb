@@ -252,5 +252,28 @@ RSpec.describe Frepl do
         frepl.run_file(file)
       end
     end
+
+    context 'doing basic file IO' do
+      it 'works' do
+        begin
+          filename = 'tmp.out'
+          expect(Frepl).to receive(:output).with("").twice
+          expect(Frepl).to receive(:output).with(" aa\n")
+          file = [
+            'character(len=1) :: c',
+            "open(unit=10, file='#{filename}')",
+            'write(10,*) "a"',
+            'close(10)',
+            "open(unit = 11, FILE='#{filename}')",
+            'read(11,*) c',
+            'close(11)',
+            'write(*,*) c, c'
+          ]
+          frepl.run_file(file)
+        ensure
+          File.unlink(filename) if File.exist?(filename)
+        end
+      end
+    end
   end
 end
