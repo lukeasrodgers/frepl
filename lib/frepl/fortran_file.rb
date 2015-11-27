@@ -40,6 +40,10 @@ module Frepl
           f.write(a.output)
         end
 
+        if @file_io
+          f.write(@file_io.output)
+        end
+
         if @execution
           f.write(@execution.output)
         end
@@ -111,6 +115,11 @@ module Frepl
 
     def visit_execution(e)
       @execution = e
+      run
+    end
+
+    def visit_file_io(io)
+      @file_io = io
       run
     end
 

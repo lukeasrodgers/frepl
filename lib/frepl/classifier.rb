@@ -19,6 +19,7 @@ module Frepl
     IF_STATEMENT_REGEX = /if\s+\(.+\)\sthen/i
     DO_LOOP_REGEX = /do\s+[^,]+,.+/i
     WHERE_REGEX = /where\s+\([^\)]+\)\s*/i
+    FILE_IO_REGEX = /open\(unit\s?=\s?\d+,\sfile\s?=\s?['"][^'"]+['"]\)/i
 
     def initialize
       @all_lines = []
@@ -58,7 +59,7 @@ module Frepl
     end
 
     def multiline?(line)
-      line.match(/\Asubroutine|function|(?:#{IF_STATEMENT_REGEX})|(?:#{DO_LOOP_REGEX})|(?:#{DERIVED_TYPE_REGEX})|(?:#{WHERE_REGEX})\z/i) || @current_multiline_obj != nil
+      line.match(/\Asubroutine|function|(?:#{IF_STATEMENT_REGEX})|(?:#{DO_LOOP_REGEX})|(?:#{DERIVED_TYPE_REGEX})|(?:#{WHERE_REGEX})|(?:#{FILE_IO_REGEX})\z/i) || @current_multiline_obj != nil
     end
 
     def repl_command?
@@ -91,8 +92,12 @@ module Frepl
       current_line.match(/allocate\(/) != nil
     end
 
+    def input?
+      current_line.match(/\s*open/i) != nil
+    end
+
     def run?
-      current_line.match(/\s*write|print|read|call/i) != nil
+      current_line.match(/\s*write|print|read|open|call/i) != nil
     end
 
     def assignment?
@@ -128,6 +133,8 @@ module Frepl
           @current_multiline_obj = DerivedType.new
         elsif line.match(/\A#{WHERE_REGEX}\z/)
           @current_multiline_obj = Where.new
+        elsif line.match(/\A#{FILE_IO_REGEX}\z/)
+          @current_multiline_obj = FileIO.new
         end
       end
       @current_multiline_obj.lines << line
