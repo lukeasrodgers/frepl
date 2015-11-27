@@ -8,12 +8,20 @@ enjoyable.
 You don't need to know ruby to use Frepl, but you do need to have ruby (at least version 2)
 installed.
 
-There are a lot of deficiencies with this code, namely:
+Frepl differs from some other Fortran REPLs (e.g. [Fytran](https://github.com/kvoss/fytran)) in that
+rather than typing a whole program then running a separate compile command, Frepl compiles and
+runs your code each time you hit <ENTER>, and generally tries to treat your input as an
+expression, and echo the result of evaluating it, like many REPLs for dynamic languages.
+
+The goal of this design is to provide instant feedback and also permit the user to quickly
+alter/redefine code they've just entered.
+
+There are a lot of deficiencies with Frepl, namely:
 
 * Only knows how to classify/parse a limited set of Fortran.
-* IO is severely hampered; basically you can't do the I part.
-I have some ideas about how to sort of accomplish this but
-they are half-baked and convoluted. Also I'm not sure this is
+* IO is fairly hampered. Reading from and writing to a file is mostly supported, but reading from
+STDIN is currently not supported. I have some ideas about how to sort of accomplish this latter
+goal, but they are half-baked and convoluted. Also I'm not sure this is
 even really that important.
 * Parsing is pretty dumb. It uses complicated and somewhat opaque regexes in places
 where a real lexer/parser approach might be more appropriate, though might also be
@@ -35,17 +43,12 @@ e.g. `integer, parameter, dimension(:) :: a`.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+```
+$ gem install frepl
+```
 
-    gem 'frepl'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install frepl
+It doesn't really make sense to install Frepl as part of an application via the Gemfile,
+but you could do that if you wanted.
 
 ## Usage
 
