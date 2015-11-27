@@ -25,7 +25,7 @@ module Frepl
     end
 
     def initialize
-      Frepl.compiler = 'gfortran'
+      Frepl.compiler = ENV['FORTRAN_COMPILER'] || 'gfortran'
       Frepl.debug = false
       reset!
     end
