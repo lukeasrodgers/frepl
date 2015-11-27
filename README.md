@@ -1,5 +1,7 @@
 # Frepl
 
+[![Build Status](https://travis-ci.org/lukeasrodgers/frepl.svg?branch=add-travis)](https://travis-ci.org/lukeasrodgers/frepl)
+
 Frepl (Fortran REPL) is an experimental ruby-based REPL for Fortran,
 that I wrote because I was trying to learn Fortran, and I find the feedback
 loop you get with a REPL makes learning a language much easier and more

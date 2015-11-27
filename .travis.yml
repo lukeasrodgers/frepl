@@ -1,0 +1,16 @@
+language: ruby
+rvm:
+  - 2.1
+env:
+  - FORTRAN_COMPILER=/usr/bin/gfortran-4.9
+script: bundle exec rspec
+
+cache:
+  apt: true
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - gfortran-4.9
