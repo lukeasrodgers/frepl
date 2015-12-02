@@ -5,7 +5,7 @@ module Frepl
     ASSIGNABLE_VALUE_REGEX = /[^\s]+/
     DERIVED_TYPE_IDENTIFIER_REGEX = /\(#{VARIABLE_NAME_REGEX}\)/
     DERIVED_TYPE_REGEX = /type\s+(#{VARIABLE_NAME_REGEX})/i
-    BUILTIN_TYPE_REGEX = /real|integer|character|logical/i
+    BUILTIN_TYPE_REGEX = /(?:double\s)?(?:real|integer|character|logical|complex)/i
     DECLARABLE_TYPE_REGEX = /#{BUILTIN_TYPE_REGEX}|type\s\(#{VARIABLE_NAME_REGEX}\)\s/i
     # TODO: parameter/dimension order shouldn't matter here
     DECLARATION_REGEX = /\As*(#{DECLARABLE_TYPE_REGEX})\s*(\((?:kind=|len=)*[^\(\)]+\)){,1}+(\s*,?\s*parameter\s*,?\s*)?(\s*,?\s*dimension\([^\)]+\))?(\s*,?\s*target)?(\s*,?\s*pointer)?\s*(?:::)?\s*([^(?:::)]*)/

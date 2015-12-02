@@ -43,6 +43,30 @@ RSpec.describe Frepl::Classifier do
       end
     end
 
+    context 'complex number' do
+      let(:line) { 'complex foo' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
+
+    context 'complex number assignment' do
+      let(:line) { 'complex :: foo = complex(1,2)' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
+
+    context 'double complex number assignment' do
+      let(:line) { 'double complex :: foo = complex(1,2)' }
+
+      it 'returns a single declaration' do
+        expect(classifier.classify(line)).to be_a(Frepl::Declaration)
+      end
+    end
+
     context 'single character declaration' do
       let(:line) { 'character(len=4) name' }
 
